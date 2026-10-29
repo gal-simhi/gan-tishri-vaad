@@ -202,6 +202,7 @@ details.imp[open] summary::after{transform:rotate(45deg)}
 .rw label{font-size:12px;font-weight:700;color:var(--muted);display:block;margin-bottom:3px}
 .rw input{width:100%;border:0;border-radius:10px;padding:10px;font:700 16px 'Heebo';color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);outline:none;min-width:0;font-variant-numeric:tabular-nums}
 .rw input:focus{box-shadow:inset 0 0 0 2px var(--teal)}
+.rw .nt{grid-column:1/-1}.rw .nt input{font-weight:500;font-size:14px}
 .rw .df{grid-column:1/-1;font-size:14px;font-weight:700;color:var(--leaf)}
 .rw .df.over{color:#b3401a}
 @media(max-width:560px){.rw{grid-template-columns:1fr auto}.rw>div:first-child{grid-column:1/-1}}
@@ -351,7 +352,8 @@ const fmt=n=>Math.round(n).toLocaleString('he-IL');
 const B=store.get('bud3',{per:150,fam:35,got:0,base:5250,rows:[{n:'מתנות לצוות ראש השנה',a:302,paid:true},{n:'מתנות לצוות פסח',a:0},{n:'מתנות לצוות סוף שנה',a:0},...['חנוכה','ט״ו בשבט','יום העצמאות','סוף שנה'].map(n=>({n,a:0}))]});
 function renderRows(){$('#rows').innerHTML=B.rows.map((r,i)=>`<div class="rw"><div><label>סעיף${r.paid?' · שולם':''}</label><input data-f="n" data-i="${i}" value="${esc(r.n)}"></div>
 <div><label>סכום ₪</label><input data-f="a" data-i="${i}" type="number" inputmode="numeric" min="0" value="${r.a||''}" placeholder="0"></div>
-<button class="del" data-x="${i}" aria-label="מחק סעיף" type="button">✕</button></div>`).join('')}
+<button class="del" data-x="${i}" aria-label="מחק סעיף" type="button">✕</button>
+<div class="nt"><input data-f="t" data-i="${i}" value="${esc(r.t||'')}" placeholder="הערות: למי שולם, איפה קנינו, קבלה…" aria-label="הערות"></div></div>`).join('')}
 function render(){
   const spent=B.rows.reduce((a,r)=>a+r.a,0),bal=B.base-spent;
   $('#sBal').textContent=fmt(bal);$('#sSpent').textContent=fmt(spent);$('#sBase').textContent=fmt(B.base);
@@ -360,7 +362,7 @@ function render(){
   store.set('bud3',B);
 }
 $('#base').value=B.base;$('#base').oninput=e=>{B.base=Math.max(0,+e.target.value||0);render()};
-$('#rows').oninput=e=>{const{f,i}=e.target.dataset;if(!f)return;B.rows[+i][f]=f==='n'?e.target.value:Math.max(0,+e.target.value||0);render()};
+$('#rows').oninput=e=>{const{f,i}=e.target.dataset;if(!f)return;B.rows[+i][f]=(f==='n'||f==='t')?e.target.value:Math.max(0,+e.target.value||0);render()};
 $('#rows').onclick=e=>{const x=e.target.dataset.x;if(x==null)return;B.rows.splice(+x,1);renderRows();render()};
 $('#addRow').onclick=()=>{B.rows.push({n:'הוצאה נוספת',a:0});renderRows();render()};
 renderRows();render();
