@@ -267,13 +267,24 @@ h1.rv{filter:blur(8px);transition:opacity 700ms var(--ease-out),transform 700ms 
 @keyframes wig{30%{transform:rotate(-14deg) scale(1.1)}65%{transform:rotate(8deg)}}
 .cf{position:fixed;width:9px;height:14px;border-radius:2px;z-index:50;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.rays,.glow,.ball,.sway,.marq .track{animation:none}h1.rv{filter:none}.sp{display:none}}
+
+.askf{margin-top:20px;display:grid;gap:10px;max-width:640px}
+.askf textarea{width:100%;min-height:110px;border:0;border-radius:16px;padding:14px 16px;font:500 16px 'Heebo';color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);resize:vertical;outline:none}
+.askf textarea:focus,.askr input:focus{box-shadow:inset 0 0 0 2px var(--teal)}
+.askr{display:flex;gap:10px;flex-wrap:wrap}
+.askr input:not(.hp){flex:1;min-width:140px;border:0;border-radius:14px;padding:12px 14px;font:500 16px 'Heebo';color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);outline:none}
+.hp{position:absolute;left:-9999px;opacity:0}
+.asks{display:grid;gap:8px;margin-top:22px;max-width:640px}
+.ask{background:var(--surface);border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);animation:pop 260ms var(--ease-out) backwards}
+.ask small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.btn[disabled]{opacity:.6;cursor:default}
 </style>
 </head>
 <body>
 <div class="sp" id="sp" aria-hidden="true"></div>
 
 <nav aria-label="ניווט"><div class="wrap">
-  <a href="#top" class="on">בית</a><a href="#staff">הצוות והוועד</a><a href="#year">שנת הגן</a><a href="#budget">תקציב</a><a href="#todo">משימות</a><a href="#pay">תשלום</a>
+  <a href="#top" class="on">בית</a><a href="#staff">הצוות והוועד</a><a href="#year">שנת הגן</a><a href="#budget">תקציב</a><a href="#todo">משימות</a><a href="#pay">תשלום</a><a href="#ask">בקשות</a>
 </div></nav>
 
 <header class="hero wrap" id="top">
@@ -374,6 +385,17 @@ h1.rv{filter:blur(8px);transition:opacity 700ms var(--ease-out),transform 700ms 
   </div>
 </div></section>
 
+<section id="ask"><div class="wrap">
+  <h2>רוצות פיצ׳ר נוסף או שינויים?</h2>
+  <p class="lead">כתבו פה. הבקשה נשמרת ומופיעה לכל הוועד.</p>
+  <form class="askf" id="askf" autocomplete="off">
+    <textarea id="askT" maxlength="500" required placeholder="למשל: להוסיף לוח שנה, טבלת ימי הולדת…" aria-label="הבקשה שלכם"></textarea>
+    <div class="askr"><input id="askN" maxlength="40" placeholder="שם (לא חובה)" aria-label="שם"><input class="hp" id="askH" tabindex="-1" aria-hidden="true"><button class="btn btn-primary" id="askB" type="submit">שליחה</button></div>
+    <p class="note" id="askS" role="status"></p>
+  </form>
+  <div class="asks" id="asks"></div>
+</div></section>
+
 <footer>ועד גן תשרי · תשפ״ז · נעשה באהבה על ידי ההורים</footer>
 
 <script>
@@ -461,6 +483,17 @@ function confetti(x,y){if(reduce)return;const cols=['#f6b93b','#c24a0e','#3a7d47
 document.addEventListener('change',e=>{const t=e.target;if(t.matches&&t.matches('.task input[type=checkbox]')&&t.checked&&T[cur].length&&T[cur].every(x=>x.d)){const r=t.getBoundingClientRect();confetti(r.left+r.width/2,r.top)}});
 /* cash count-up on first view */
 new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){o.disconnect();if(reduce)return;['sBal','sSpent','sBase'].forEach(id=>{const el=document.getElementById(id);const to=+el.textContent.replace(/[^\d-]/g,'')||0;const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/900),v=Math.round(to*(1-Math.pow(1-p,4)));el.textContent=fmt(v);if(p<1)requestAnimationFrame(f);else render()})(t0)})}}),{threshold:.4}).observe($('.sum'));
+/* requests box */
+const API='https://gan-tishri-requests.amazing-family.workers.dev';
+const askS=$('#askS');
+function showAsk(list){$('#asks').innerHTML='';list.forEach((r,i)=>{const d=document.createElement('div');d.className='ask';d.style.setProperty('--i',i);
+  const t=document.createElement('div');t.textContent=r.text;const m=document.createElement('small');m.textContent=(r.name?r.name+' · ':'')+new Date(r.t).toLocaleDateString('he-IL');d.append(t,m);$('#asks').appendChild(d)})}
+async function loadAsks(){try{const r=await fetch(API);if(r.ok)showAsk(await r.json())}catch{}}
+$('#askf').onsubmit=async e=>{e.preventDefault();const b=$('#askB');b.disabled=true;askS.textContent='שולחת…';
+  try{const r=await fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:$('#askT').value,name:$('#askN').value,hp:$('#askH').value})});
+    if(r.ok){askS.textContent='נשלח, תודה!';$('#askT').value='';loadAsks()}else askS.textContent=r.status===429?'רגע, אפשר לשלוח שוב בעוד דקה':'לא הצליח לשלוח, נסו שוב';
+  }catch{askS.textContent='אין חיבור, נסו שוב'}b.disabled=false};
+loadAsks();
 </script>
 </body>
 </html>
