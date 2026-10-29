@@ -268,23 +268,21 @@ h1.rv{filter:blur(8px);transition:opacity 700ms var(--ease-out),transform 700ms 
 .cf{position:fixed;width:9px;height:14px;border-radius:2px;z-index:50;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.rays,.glow,.ball,.sway,.marq .track{animation:none}h1.rv{filter:none}.sp{display:none}}
 
-.askf{margin-top:20px;display:grid;gap:10px;max-width:640px}
-.askf textarea{width:100%;min-height:110px;border:0;border-radius:16px;padding:14px 16px;font:500 16px 'Heebo';color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);resize:vertical;outline:none}
-.askf textarea:focus,.askr input:focus{box-shadow:inset 0 0 0 2px var(--teal)}
-.askr{display:flex;gap:10px;flex-wrap:wrap}
-.askr input:not(.hp){flex:1;min-width:140px;border:0;border-radius:14px;padding:12px 14px;font:500 16px 'Heebo';color:var(--ink);background:var(--surface);box-shadow:inset 0 0 0 2px var(--line);outline:none}
-.hp{position:absolute;left:-9999px;opacity:0}
-.asks{display:grid;gap:8px;margin-top:22px;max-width:640px}
-.ask{background:var(--surface);border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);animation:pop 260ms var(--ease-out) backwards}
-.ask small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
-.btn[disabled]{opacity:.6;cursor:default}
+
+.rw{position:relative;padding-inline-start:40px}
+.grip{position:absolute;inset-inline-start:8px;top:50%;margin-top:-20px;width:28px;height:40px;border:0;background:transparent;color:var(--muted);cursor:grab;border-radius:8px;display:grid;place-items:center;touch-action:none;transition:color 160ms ease,background-color 160ms ease}
+.grip svg{width:18px;height:18px}
+@media (hover:hover) and (pointer:fine){.grip:hover{color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent)}}
+.rw.dragging{z-index:5;cursor:grabbing;box-shadow:0 16px 32px -14px rgba(0,0,0,.35);transition:none;background:var(--surface)}
+.rw.shift{transition:transform 220ms var(--ease-out)}
+.rows .rw{will-change:auto}
 </style>
 </head>
 <body>
 <div class="sp" id="sp" aria-hidden="true"></div>
 
 <nav aria-label="ניווט"><div class="wrap">
-  <a href="#top" class="on">בית</a><a href="#staff">הצוות והוועד</a><a href="#year">שנת הגן</a><a href="#budget">תקציב</a><a href="#todo">משימות</a><a href="#pay">תשלום</a><a href="#ask">בקשות</a>
+  <a href="#top" class="on">בית</a><a href="#staff">הצוות והוועד</a><a href="#year">שנת הגן</a><a href="#budget">תקציב</a><a href="#todo">משימות</a><a href="#pay">תשלום</a>
 </div></nav>
 
 <header class="hero wrap" id="top">
@@ -385,17 +383,6 @@ h1.rv{filter:blur(8px);transition:opacity 700ms var(--ease-out),transform 700ms 
   </div>
 </div></section>
 
-<section id="ask"><div class="wrap">
-  <h2>רוצות פיצ׳ר נוסף או שינויים?</h2>
-  <p class="lead">כתבו פה. הבקשה נשמרת ומופיעה לכל הוועד.</p>
-  <form class="askf" id="askf" autocomplete="off">
-    <textarea id="askT" maxlength="500" required placeholder="למשל: להוסיף לוח שנה, טבלת ימי הולדת…" aria-label="הבקשה שלכם"></textarea>
-    <div class="askr"><input id="askN" maxlength="40" placeholder="שם (לא חובה)" aria-label="שם"><input class="hp" id="askH" tabindex="-1" aria-hidden="true"><button class="btn btn-primary" id="askB" type="submit">שליחה</button></div>
-    <p class="note" id="askS" role="status"></p>
-  </form>
-  <div class="asks" id="asks"></div>
-</div></section>
-
 <footer>ועד גן תשרי · תשפ״ז · נעשה באהבה על ידי ההורים</footer>
 
 <script>
@@ -423,7 +410,7 @@ const B=store.get('bud3',{per:150,fam:35,got:0,base:5250,rows:[{n:'מתנות ל
 ['מתנות לצוות ראש השנה','מתנות לצוות פסח','מתנות לצוות סוף שנה'].forEach((n,i)=>{if(!B.rows.some(r=>r.n===n))B.rows.splice(i,0,n.includes('ראש')?{n,a:302,paid:true}:{n,a:0})});
 const NOTES={"חנוכה": "כיבוד למסיבה משותפת הורים וילדים (סופגניות ושתייה)", "ט״ו בשבט": "שתילים שהילדים שותלים בחצר הגן", "יום העצמאות": "ארוחה חגיגית וישראלית לילדים (פלאפל)", "סוף שנה": "כיבוד למסיבה משותפת להורים ולילדים (ואם נשאר תקציב ניתן להשתתף במתנות לילדים)"};
 B.rows.forEach(r=>{if(NOTES[r.n]&&r.t==null)r.t=NOTES[r.n]});
-function renderRows(){$('#rows').innerHTML=B.rows.map((r,i)=>`<div class="rw"><div><label>סעיף${r.paid?' · שולם':''}</label><input data-f="n" data-i="${i}" value="${esc(r.n)}"></div>
+function renderRows(){$('#rows').innerHTML=B.rows.map((r,i)=>`<div class="rw" data-row="${i}"><button class="grip" type="button" data-g="${i}" aria-label="הזזת סעיף (גרירה או חצים)"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg></button><div><label>סעיף${r.paid?' · שולם':''}</label><input data-f="n" data-i="${i}" value="${esc(r.n)}"></div>
 <div><label>סכום ₪</label><input data-f="a" data-i="${i}" type="number" inputmode="numeric" min="0" value="${r.a||''}" placeholder="0"></div>
 <div class="nt"><label>הערות</label><input data-f="t" data-i="${i}" value="${esc(r.t||'')}" placeholder="למי שולם, איפה קנינו, קבלה…" aria-label="הערות"></div>
 <button class="del" data-x="${i}" aria-label="מחק סעיף" type="button">✕</button></div>`).join('')}
@@ -483,17 +470,21 @@ function confetti(x,y){if(reduce)return;const cols=['#f6b93b','#c24a0e','#3a7d47
 document.addEventListener('change',e=>{const t=e.target;if(t.matches&&t.matches('.task input[type=checkbox]')&&t.checked&&T[cur].length&&T[cur].every(x=>x.d)){const r=t.getBoundingClientRect();confetti(r.left+r.width/2,r.top)}});
 /* cash count-up on first view */
 new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){o.disconnect();if(reduce)return;['sBal','sSpent','sBase'].forEach(id=>{const el=document.getElementById(id);const to=+el.textContent.replace(/[^\d-]/g,'')||0;const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/900),v=Math.round(to*(1-Math.pow(1-p,4)));el.textContent=fmt(v);if(p<1)requestAnimationFrame(f);else render()})(t0)})}}),{threshold:.4}).observe($('.sum'));
-/* requests box */
-const API='https://gan-tishri-requests.amazing-family.workers.dev';
-const askS=$('#askS');
-function showAsk(list){$('#asks').innerHTML='';list.forEach((r,i)=>{const d=document.createElement('div');d.className='ask';d.style.setProperty('--i',i);
-  const t=document.createElement('div');t.textContent=r.text;const m=document.createElement('small');m.textContent=(r.name?r.name+' · ':'')+new Date(r.t).toLocaleDateString('he-IL');d.append(t,m);$('#asks').appendChild(d)})}
-async function loadAsks(){try{const r=await fetch(API);if(r.ok)showAsk(await r.json())}catch{}}
-$('#askf').onsubmit=async e=>{e.preventDefault();const b=$('#askB');b.disabled=true;askS.textContent='שולחת…';
-  try{const r=await fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:$('#askT').value,name:$('#askN').value,hp:$('#askH').value})});
-    if(r.ok){askS.textContent='נשלח, תודה!';$('#askT').value='';loadAsks()}else askS.textContent=r.status===429?'רגע, אפשר לשלוח שוב בעוד דקה':'לא הצליח לשלוח, נסו שוב';
-  }catch{askS.textContent='אין חיבור, נסו שוב'}b.disabled=false};
-loadAsks();
+/* reorder expenses */
+$('#rows').addEventListener('pointerdown',e=>{
+  const g=e.target.closest('.grip');if(!g||e.button>0)return;e.preventDefault();
+  const rows=[...document.querySelectorAll('#rows .rw')],from=+g.dataset.g,el=rows[from];
+  const rects=rows.map(r=>r.getBoundingClientRect()),startY=e.clientY,h=rects[from].height+10;let to=from;
+  g.setPointerCapture(e.pointerId);el.classList.add('dragging');rows.forEach(r=>{if(r!==el)r.classList.add('shift')});
+  const move=ev=>{const dy=ev.clientY-startY;el.style.transform=`translateY(${dy}px) scale(1.01)`;
+    const c=rects[from].top+rects[from].height/2+dy;to=from;
+    rects.forEach((r,i)=>{if(i!==from&&((i>from&&c>r.top+r.height/2)||(i<from&&c<r.top+r.height/2)))to=i>from?Math.max(to,i):Math.min(to,i)});
+    rows.forEach((r,i)=>{if(i===from)return;let sh=0;if(from<to&&i>from&&i<=to)sh=-h;if(from>to&&i<from&&i>=to)sh=h;r.style.transform=sh?`translateY(${sh}px)`:''})};
+  const up=()=>{g.removeEventListener('pointermove',move);g.removeEventListener('pointerup',up);g.removeEventListener('pointercancel',up);
+    if(to!==from){const[x]=B.rows.splice(from,1);B.rows.splice(to,0,x)}renderRows();render()};
+  g.addEventListener('pointermove',move);g.addEventListener('pointerup',up);g.addEventListener('pointercancel',up)});
+$('#rows').addEventListener('keydown',e=>{const g=e.target.closest('.grip');if(!g||!['ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();
+  const i=+g.dataset.g,j=e.key==='ArrowUp'?i-1:i+1;if(j<0||j>=B.rows.length)return;[B.rows[i],B.rows[j]]=[B.rows[j],B.rows[i]];renderRows();render();document.querySelector(`.grip[data-g="${j}"]`).focus()});
 </script>
 </body>
 </html>
