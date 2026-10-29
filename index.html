@@ -15,7 +15,7 @@
 <style>
 :root{
   --bg:#fff6e8; --surface:#fffdf8; --ink:#1f2a37; --muted:#5f6b78; --line:#eadcc4;
-  --teal:#0f6b6b; --teal-d:#0a4d4f; --orange:#f0672a; --sun:#f6b93b; --leaf:#4f9d5d; --sky:#4aa3d8;
+  --teal:#0f6b6b; --teal-fill:#0f6b6b; --teal-d:#0a4d4f; --orange:#c24a0e; --sun:#f6b93b; --leaf:#3a7d47; --sky:#2b7fb3;
   --c1:#f0672a; --c2:#4f9d5d; --c3:#4aa3d8; --c4:#f6b93b;
   --ease-out:cubic-bezier(.23,1,.32,1);
   --ease-io:cubic-bezier(.77,0,.175,1);
@@ -24,7 +24,7 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#14201f; --surface:#1b2b2a; --ink:#f3ead9; --muted:#a8b5b0; --line:#2c403e;
-    --teal:#5fc4b8; --teal-d:#8fe0d4; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+    --teal:#5fc4b8; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
   }
 }
 *{box-sizing:border-box;margin:0}
@@ -45,20 +45,21 @@ nav a{white-space:nowrap;text-decoration:none;color:var(--ink);font-weight:500;f
   transition:background-color 160ms ease,transform 160ms var(--ease-out)}
 nav a:active{transform:scale(.96)}
 @media (hover:hover) and (pointer:fine){nav a:hover{background:color-mix(in srgb,var(--sun) 30%,transparent)}}
-nav a.on{background:var(--teal);color:#fff}
+nav a.on{background:var(--teal-fill);color:#fff}
 
 /* hero */
 .hero{padding-block:clamp(40px,7vw,80px) clamp(32px,5vw,56px);position:relative}
 .hero h1{font-family:'Rubik','Heebo',sans-serif;font-weight:900;font-size:clamp(38px,7vw,68px);letter-spacing:-.02em}
 .hero h1 em{font-style:normal;color:var(--orange)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero h1 em{color:#ff9a66}}
 .hero p.sub{font-size:clamp(18px,2.4vw,22px);color:var(--muted);margin-top:16px;max-width:36ch}
 .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
 .btn{display:inline-flex;align-items:center;gap:8px;font:700 17px 'Heebo';text-decoration:none;border:0;cursor:pointer;
   padding:15px 26px;border-radius:16px;min-height:48px;transition:transform 160ms var(--ease-out),box-shadow 200ms ease}
 .btn:active{transform:scale(.97)}
-.btn-primary{background:var(--orange);color:#fff;box-shadow:0 10px 24px -10px rgba(240,103,42,.7)}
+.btn-primary{background:var(--orange);color:#fff;box-shadow:0 10px 24px -10px rgba(0,0,0,.3)}
 .btn-ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--line)}
-@media (hover:hover) and (pointer:fine){.btn-primary:hover{box-shadow:0 14px 28px -10px rgba(240,103,42,.8)}.btn-ghost:hover{box-shadow:inset 0 0 0 2px var(--teal)}}
+@media (hover:hover) and (pointer:fine){.btn-primary:hover{box-shadow:0 14px 28px -10px rgba(0,0,0,.4)}.btn-ghost:hover{box-shadow:inset 0 0 0 2px var(--teal)}}
 .hero-art{position:absolute;inset-inline-end:0;top:40px;width:min(36vw,380px);pointer-events:none}
 @media(min-width:721px){.hero>:not(.hero-art):not(.stats){max-width:60%}}
 @media(max-width:720px){.hero-art{position:static;width:70%;margin:0 0 -8px auto;display:block}}
@@ -77,7 +78,7 @@ nav a.on{background:var(--teal);color:#fff}
 .av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:22px;color:#fff;flex:none}
 .person small{color:var(--muted);display:block;font-size:13px}
 .person b{font-size:18px}
-.person.lead-p{grid-column:1/-1;background:var(--teal);color:#fff}
+.person.lead-p{grid-column:1/-1;background:var(--teal-fill);color:#fff}
 .person.lead-p small{color:#cdeeea}
 
 /* timeline */
@@ -132,7 +133,7 @@ input[type=range]{width:100%;accent-color:var(--orange);height:32px}
 .tab{border:0;cursor:pointer;font:700 15px 'Heebo';padding:10px 18px;border-radius:99px;background:var(--surface);color:var(--ink);
   box-shadow:inset 0 0 0 2px var(--line);white-space:nowrap;transition:transform 160ms var(--ease-out),background-color 160ms ease,color 160ms ease}
 .tab:active{transform:scale(.96)}
-.tab[aria-selected=true]{background:var(--teal);color:#fff;box-shadow:none}
+.tab[aria-selected=true]{background:var(--teal-fill);color:#fff;box-shadow:none}
 .tasks{margin-top:14px;display:grid;gap:8px}
 .task{display:flex;align-items:center;gap:14px;background:var(--surface);border-radius:16px;padding:6px 8px 6px 16px;box-shadow:var(--shadow);
   animation:pop 260ms var(--ease-out) backwards;animation-delay:calc(var(--i,0)*35ms)}
@@ -156,7 +157,7 @@ input[type=range]{width:100%;accent-color:var(--orange);height:32px}
 .del:active{transform:scale(.9)}
 
 /* pay */
-.pay{background:var(--teal-d);color:#fff;border-radius:32px;padding:clamp(28px,6vw,56px);text-align:center;position:relative;overflow:hidden}
+.pay{background:#0a4d4f;color:#fff;border-radius:32px;padding:clamp(28px,6vw,56px);text-align:center;position:relative;overflow:hidden}
 .pay h2{color:#fff}.pay p{color:#cdeeea;margin:10px auto 26px;max-width:44ch}
 .pay .btn-primary{font-size:19px;padding:17px 34px}
 .pay::before,.pay::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.06)}
@@ -194,7 +195,7 @@ details.imp[open] summary::after{transform:rotate(45deg)}
 .sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:22px}
 .sum .stat{background:var(--bg);box-shadow:none}
 .sum .stat b{font-size:clamp(26px,5vw,36px)}
-.cash{background:var(--teal)!important;color:#fff}.cash b{color:#fff!important}.cash span{color:#cdeeea!important}
+.cash{background:var(--teal-fill)!important;color:#fff}.cash b{color:#fff!important}.cash span{color:#cdeeea!important}
 .cash.neg{background:#b3401a!important}
 .bgrid{display:grid;grid-template-columns:1fr;gap:14px;max-width:340px}
 .rows{display:grid;gap:10px;margin-top:12px}
@@ -208,12 +209,30 @@ details.imp[open] summary::after{transform:rotate(45deg)}
 @media(max-width:560px){.rw{grid-template-columns:1fr auto}.rw>div:first-child{grid-column:1/-1}}
 .totrow{display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;margin-top:16px;font-size:15px}
 
-.sg{margin-top:28px;background:var(--surface);border-radius:24px;padding:22px 26px;box-shadow:var(--shadow)}
+.sg{margin-top:36px}
 .sg h3{font-size:22px;margin-bottom:4px}.sg p{color:var(--muted)}
 .sg-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
 .sg-i{background:var(--bg);border-radius:16px;padding:14px 16px;box-shadow:inset 0 0 0 2px var(--line)}
 .sg-i b{display:block;font-size:18px}.sg-i span{font-size:13px;font-weight:700;color:var(--muted)}
 .sg-i.done{background:color-mix(in srgb,var(--leaf) 16%,transparent);box-shadow:none}.sg-i.done span{color:var(--leaf)}
+
+.card{border-inline-start:0!important}
+.card .m{display:inline-block;padding:2px 12px;border-radius:99px;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--ink);filter:none}
+.dot svg{width:26px;height:26px}
+.gift .gi svg{width:34px;height:34px}.gift .gi{font-size:0;display:grid}
+.facts{margin-top:36px;color:var(--muted);font-size:18px}.facts b{color:var(--teal);font-family:'Rubik','Heebo',sans-serif;font-size:26px;font-variant-numeric:tabular-nums}.facts i{font-style:normal;margin-inline:6px;opacity:.5}
+h2{margin-bottom:4px}
+::selection{background:var(--sun);color:#3a2a00}
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:8px}
+input,textarea,select{caret-color:var(--orange)}
+.sum .stat b,.rw input,.field input{font-variant-numeric:tabular-nums}
+.sum{gap:0;background:var(--bg);border-radius:20px;overflow:hidden}
+.sum .stat{border-radius:0;box-shadow:none;border-inline-start:1px solid var(--line)}
+.sum .stat:first-child{border-inline-start:0}
+p,.lead{text-wrap:pretty}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sg-i.done span,:root:not([data-theme="light"]) .rw .df{color:#7bc47f}}
+@media(max-width:560px){.sum{grid-template-columns:repeat(3,1fr)}.sum .stat{padding:14px 10px}.sum .stat b{font-size:22px}.sum .stat span{font-size:12px}}
 </style>
 </head>
 <body>
@@ -236,23 +255,19 @@ details.imp[open] summary::after{transform:rotate(45deg)}
     <rect x="224" y="226" width="14" height="24" rx="3" fill="#fff6e8"/>
     <circle cx="300" cy="226" r="24" fill="#4aa3d8"/><circle cx="300" cy="226" r="24" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="3 7" opacity=".7"/>
   </svg>
-  <p class="eyebrow rv">ועד הורים · שנת הלימודים תשפ״ז</p>
+
   <h1 class="rv" style="--i:1">גן <em>תשרי</em><br>מתקצבים סופגניות, מנהלים כאוס</h1>
   <p class="sub rv" style="--i:2">כל מה שוועד הגן צריך במקום אחד: תקציב, חגים, משימות ותשלום.</p>
   <div class="cta-row rv" style="--i:3">
     <a class="btn btn-primary" href="https://links.payboxapp.com/p5yYmgard6b" target="_blank" rel="noopener">לתשלום בפייבוקס ←</a>
     <a class="btn btn-ghost" href="#todo">למשימות הועד</a>
   </div>
-  <div class="stats">
-    <div class="stat rv" style="--i:4"><b data-n="35">0</b><span>ילדים בגן</span></div>
-    <div class="stat rv" style="--i:5"><b data-n="20">0</b><span>בנות</span></div>
-    <div class="stat rv" style="--i:6"><b data-n="15">0</b><span>בנים</span></div>
-    <div class="stat rv" style="--i:7"><b data-n="4">0</b><span>אירועים מתוקצבים</span></div>
-  </div>
+  <p class="facts rv" style="--i:4"><b>35</b> ילדים בגן <i>·</i> <b>20</b> בנות <i>·</i> <b>15</b> בנים</p>
+</div>
 </header>
 
 <section id="staff"><div class="wrap">
-  <p class="eyebrow">הצוות והוועד</p><h2>האנשים מאחורי הגן</h2>
+  <h2>האנשים מאחורי הגן</h2>
   <div class="staff">
     <div class="person lead-p rv"><div class="av" style="background:var(--orange)">מ</div><div><small>גננת</small><b>מיכל הופמן</b></div></div>
     <div class="person rv" style="--i:1"><div class="av" style="background:var(--leaf)">י</div><div><small>סייעת</small><b>יפה</b></div></div>
@@ -262,33 +277,33 @@ details.imp[open] summary::after{transform:rotate(45deg)}
   </div>
   <h2 style="margin-top:56px;font-size:clamp(24px,4vw,32px)">ועד ההורים</h2>
   <div class="staff">
-    <div class="person rv"><div class="av" style="background:var(--teal)">ש</div><div><small>ועד</small><b>שירלי</b></div></div>
+    <div class="person rv"><div class="av" style="background:var(--teal-fill)">ש</div><div><small>ועד</small><b>שירלי</b></div></div>
     <div class="person rv" style="--i:1"><div class="av" style="background:var(--orange)">ע</div><div><small>ועד</small><b>עינב</b></div></div>
     <div class="person rv" style="--i:2"><div class="av" style="background:var(--sky)">ג</div><div><small>ועד</small><b>גל</b></div></div>
   </div>
 </div></section>
 
 <section id="year"><div class="wrap">
-  <p class="eyebrow">שנת הגן</p><h2>מה הועד מממן לאורך השנה</h2>
+  <h2>מה הועד מממן לאורך השנה</h2>
   <p class="lead">ארבע תחנות. בכל אחת הועד משתתף, והגן מוסיף הפתעות בכל חג.</p>
   <div class="tl" id="tl">
     <div class="fill"></div>
-    <div class="ev rv" style="--c:var(--c1)"><div class="dot">🕎</div><div class="card"><span class="m">דצמבר</span><h3>חנוכה</h3><p>כיבוד למסיבה משותפת להורים וילדים: סופגניות ושתייה.</p><span class="tag">סופגניות + שתייה</span></div></div>
-    <div class="ev rv" style="--c:var(--c2)"><div class="dot">🌱</div><div class="card"><span class="m">פברואר</span><h3>ט״ו בשבט</h3><p>שתילים שהילדים שותלים בחצר הגן.</p><span class="tag">שתילים לחצר</span></div></div>
-    <div class="ev rv" style="--c:var(--c3)"><div class="dot">🇮🇱</div><div class="card"><span class="m">אפריל</span><h3>יום העצמאות</h3><p>ארוחה חגיגית וישראלית לילדים.</p><span class="tag">פלאפל לכולם</span></div></div>
-    <div class="ev rv" style="--c:var(--c4)"><div class="dot">🎓</div><div class="card"><span class="m">יוני</span><h3>סוף שנה</h3><p>כיבוד למסיבה משותפת להורים ולילדים. אם יישאר תקציב, נשתתף גם במתנות לילדים.</p><span class="tag">כיבוד + מתנות (אם נשאר)</span></div></div>
+    <div class="ev rv" style="--c:var(--c1)"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8v3a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V8M12 15v5M8 20h8M12 4v8M4 8V6M8 8V6M16 8V6M20 8V6"/></svg></div><div class="card"><span class="m">דצמבר</span><h3>חנוכה</h3><p>כיבוד למסיבה משותפת להורים וילדים: סופגניות ושתייה.</p><span class="tag">סופגניות + שתייה</span></div></div>
+    <div class="ev rv" style="--c:var(--c2)"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-8M12 13c0-4-3-6-7-6 0 4 3 6 7 6zM12 13c0-3 2-5 6-5 0 3-2 5-6 5z"/></svg></div><div class="card"><span class="m">פברואר</span><h3>ט״ו בשבט</h3><p>שתילים שהילדים שותלים בחצר הגן.</p><span class="tag">שתילים לחצר</span></div></div>
+    <div class="ev rv" style="--c:var(--c3)"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/></svg></div><div class="card"><span class="m">אפריל</span><h3>יום העצמאות</h3><p>ארוחה חגיגית וישראלית לילדים.</p><span class="tag">פלאפל לכולם</span></div></div>
+    <div class="ev rv" style="--c:var(--c4)"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5zM6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg></div><div class="card"><span class="m">יוני</span><h3>סוף שנה</h3><p>כיבוד למסיבה משותפת להורים ולילדים. אם יישאר תקציב, נשתתף גם במתנות לילדים.</p><span class="tag">כיבוד + מתנות (אם נשאר)</span></div></div>
   </div>
-  <div class="sg rv"><h3>🎀 מתנות לצוות הגן</h3><p>שלוש מתנות לאורך השנה, במקום אחד.</p>
+  <div class="sg rv"><h3>מתנות לצוות הגן</h3><p>שלוש מתנות לאורך השנה, במקום אחד.</p>
     <div class="sg-row">
       <div class="sg-i done"><b>ראש השנה</b><span>✓ שולם</span></div>
       <div class="sg-i"><b>פסח</b><span>בקרוב</span></div>
       <div class="sg-i"><b>סוף שנה</b><span>בקרוב</span></div>
     </div></div>
-  <div class="gift rv"><span>🎁</span><div><b>מה הגן נותן?</b><br>הפתעות בכל החגים ומתנות סוף שנה.</div></div>
+  <div class="gift rv"><span class="gi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7C10 3 6 4 7 7M12 7c2-4 6-3 5 0"/></svg></span><div><b>מה הגן נותן?</b><br>הפתעות בכל החגים ומתנות סוף שנה.</div></div>
 </div></section>
 
 <section id="budget"><div class="wrap">
-  <p class="eyebrow">תקציב</p><h2>כמה צריך, ולמה</h2>
+  <h2>כמה צריך, ולמה</h2>
   <p class="lead">הוצאות הוועד ומצב הקופה. הכול מתעדכן מיד ונשמר במכשיר.</p>
   <div class="panel rv">
     <div class="sum">
@@ -311,7 +326,7 @@ details.imp[open] summary::after{transform:rotate(45deg)}
 </div></section>
 
 <section id="todo"><div class="wrap">
-  <p class="eyebrow">משימות</p><h2>מי עושה מה</h2>
+  <h2>מי עושה מה</h2>
   <p class="lead">סמנו מה בוצע, רשמו מי אחראי והוסיפו משימות. נשמר במכשיר שלכם.</p>
   <div class="tabs" id="tabs" role="tablist"></div>
   <div class="tasks" id="tasks"></div>
