@@ -236,6 +236,12 @@ p,.lead{text-wrap:pretty}
 .gnotes{width:100%;min-height:96px;border:0;border-radius:14px;padding:12px 14px;font:500 15px 'Heebo';color:var(--ink);background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);resize:vertical;outline:none}.gnotes:focus{box-shadow:inset 0 0 0 2px var(--teal)}
 h1,h2,h3,.stat b,.facts b{font-family:'Secular One','Heebo',sans-serif;font-weight:400!important;letter-spacing:0}
 h1{line-height:1.08}
+
+.pen{border:0;background:transparent;color:var(--muted);cursor:pointer;width:28px;height:28px;border-radius:8px;display:inline-grid;place-items:center;vertical-align:middle;transition:transform 160ms var(--ease-out),color 160ms ease,background-color 160ms ease}
+.pen svg{width:16px;height:16px}.pen:active{transform:scale(.9)}
+@media (hover:hover) and (pointer:fine){.pen:hover{color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent)}}
+.inl{width:100%;border:0;background:transparent;font:400 clamp(26px,5vw,36px) 'Secular One','Heebo',sans-serif;color:var(--teal);outline:none;box-shadow:0 2px 0 var(--teal);padding:0;font-variant-numeric:tabular-nums;border-radius:2px}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield;appearance:textfield}
 </style>
 </head>
 <body>
@@ -312,11 +318,7 @@ h1{line-height:1.08}
     <div class="sum">
       <div class="stat cash" id="cash"><b id="sBal">0</b><span>מצב הקופה ₪</span></div>
       <div class="stat"><b id="sSpent">0</b><span>סה״כ הוצאות ₪</span></div>
-      <div class="stat"><b id="sBase">0</b><span>נכנס לקופה ₪</span></div>
-    </div>
-    <div class="bgrid">
-      <div><label class="f" for="base">סכום בקופה (סה״כ שנאסף)</label>
-        <div class="field"><input id="base" type="number" inputmode="numeric" min="0" step="10" value="5250"><i>₪</i></div></div>
+      <div class="stat" id="baseCard"><b id="sBase">0</b><span>נכנס לקופה ₪ <button class="pen" id="pen" type="button" aria-label="עריכת הסכום שנכנס לקופה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button></span></div>
     </div>
     <h3 style="margin-top:28px;font-size:20px">הוצאות</h3>
     <div class="rows" id="rows"></div>
@@ -384,8 +386,10 @@ function render(){
   $('#warn').textContent=bal<0?`ההוצאות עוברות את הקופה ב-${fmt(-bal)} ₪`:'';
   store.set('bud3',B);
 }
+$('#pen').onclick=()=>{const b=$('#sBase');if(b.tagName==='INPUT')return;const i=document.createElement('input');i.id='sBase';i.type='text';i.inputMode='numeric';i.className='inl';i.value=B.base;b.replaceWith(i);i.focus();i.select();
+  const done=()=>{B.base=Math.max(0,+String(i.value).replace(/[^\d.]/g,'')||0);const nb=document.createElement('b');nb.id='sBase';i.replaceWith(nb);render()};
+  i.onblur=done;i.onkeydown=e=>{if(e.key==='Enter')i.blur();if(e.key==='Escape'){i.value=B.base;i.blur()}}};
 $('#gnotes').value=B.notes||'';$('#gnotes').oninput=e=>{B.notes=e.target.value;render()};
-$('#base').value=B.base;$('#base').oninput=e=>{B.base=Math.max(0,+e.target.value||0);render()};
 $('#rows').oninput=e=>{const{f,i}=e.target.dataset;if(!f)return;B.rows[+i][f]=(f==='n'||f==='t')?e.target.value:Math.max(0,+e.target.value||0);render()};
 $('#rows').onclick=e=>{const x=e.target.dataset.x;if(x==null)return;B.rows.splice(+x,1);renderRows();render()};
 $('#addRow').onclick=()=>{B.rows.push({n:'הוצאה נוספת',a:0});renderRows();render()};
