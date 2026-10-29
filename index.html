@@ -206,6 +206,13 @@ details.imp[open] summary::after{transform:rotate(45deg)}
 .rw .df.over{color:#b3401a}
 @media(max-width:560px){.rw{grid-template-columns:1fr auto}.rw>div:first-child{grid-column:1/-1}}
 .totrow{display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;margin-top:16px;font-size:15px}
+
+.sg{margin-top:28px;background:var(--surface);border-radius:24px;padding:22px 26px;box-shadow:var(--shadow)}
+.sg h3{font-size:22px;margin-bottom:4px}.sg p{color:var(--muted)}
+.sg-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
+.sg-i{background:var(--bg);border-radius:16px;padding:14px 16px;box-shadow:inset 0 0 0 2px var(--line)}
+.sg-i b{display:block;font-size:18px}.sg-i span{font-size:13px;font-weight:700;color:var(--muted)}
+.sg-i.done{background:color-mix(in srgb,var(--leaf) 16%,transparent);box-shadow:none}.sg-i.done span{color:var(--leaf)}
 </style>
 </head>
 <body>
@@ -270,6 +277,12 @@ details.imp[open] summary::after{transform:rotate(45deg)}
     <div class="ev rv" style="--c:var(--c3)"><div class="dot">🇮🇱</div><div class="card"><span class="m">אפריל</span><h3>יום העצמאות</h3><p>ארוחה חגיגית וישראלית לילדים.</p><span class="tag">פלאפל לכולם</span></div></div>
     <div class="ev rv" style="--c:var(--c4)"><div class="dot">🎓</div><div class="card"><span class="m">יוני</span><h3>סוף שנה</h3><p>כיבוד למסיבה משותפת להורים ולילדים. אם יישאר תקציב, נשתתף גם במתנות לילדים.</p><span class="tag">כיבוד + מתנות (אם נשאר)</span></div></div>
   </div>
+  <div class="sg rv"><h3>🎀 מתנות לצוות הגן</h3><p>שלוש מתנות לאורך השנה, במקום אחד.</p>
+    <div class="sg-row">
+      <div class="sg-i done"><b>ראש השנה</b><span>✓ שולם</span></div>
+      <div class="sg-i"><b>פסח</b><span>בקרוב</span></div>
+      <div class="sg-i"><b>סוף שנה</b><span>בקרוב</span></div>
+    </div></div>
   <div class="gift rv"><span>🎁</span><div><b>מה הגן נותן?</b><br>הפתעות בכל החגים ומתנות סוף שנה.</div></div>
 </div></section>
 
@@ -335,7 +348,7 @@ document.querySelectorAll('header[id],section[id]').forEach(s=>so.observe(s));
 
 /* budget */
 const fmt=n=>Math.round(n).toLocaleString('he-IL');
-const B=store.get('bud3',{per:150,fam:35,got:0,base:5250,rows:[{n:'מתנות לצוות ראש השנה',a:302,paid:true},...['חנוכה','ט״ו בשבט','יום העצמאות','סוף שנה'].map(n=>({n,a:0}))]});
+const B=store.get('bud3',{per:150,fam:35,got:0,base:5250,rows:[{n:'מתנות לצוות ראש השנה',a:302,paid:true},{n:'מתנות לצוות פסח',a:0},{n:'מתנות לצוות סוף שנה',a:0},...['חנוכה','ט״ו בשבט','יום העצמאות','סוף שנה'].map(n=>({n,a:0}))]});
 function renderRows(){$('#rows').innerHTML=B.rows.map((r,i)=>`<div class="rw"><div><label>סעיף${r.paid?' · שולם':''}</label><input data-f="n" data-i="${i}" value="${esc(r.n)}"></div>
 <div><label>סכום ₪</label><input data-f="a" data-i="${i}" type="number" inputmode="numeric" min="0" value="${r.a||''}" placeholder="0"></div>
 <button class="del" data-x="${i}" aria-label="מחק סעיף" type="button">✕</button></div>`).join('')}
